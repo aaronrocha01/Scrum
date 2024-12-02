@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>Euro industrial León</title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Bootstrap CSS -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
+        <!-- Bootstrap Icons -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+              integrity="sha512-xrJP5R1TTLJtE6QYyAWPlO0+s5Djw4IYfhz7fY5FVu6t2u54Q5Rc8dM7HvD8r7gbAZVOPFJpVGsNEm9jz0T4iA=="
+              crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css" rel="stylesheet" />
+        <!-- Estilos del mapa -->
+        <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
+        <link rel="icon" href="img/Logoeuro.png" type="image/icon" />
+        <style>
+            .navbar-brand img {
+                width: 150px;
+                height: 50px;
+            }
+
+            @media (max-width: 100% ) {
+                .navbar-brand img {
+                    width: 120px;
+                    height: 40px;
+                }
+
+                .navbar-brand {
+                    font-size: 14px;
+                }
+            }
+
+            @media (max-width: 100%) {
+                .navbar-brand img {
+                    width: 130px;
+                    height: 45px;
+                }
+
+                .navbar-brand {
+                    font-size: 16px;
+                }
+            }
+
+            @media (max-width: 100%) {
+                .navbar-brand img {
+                    width: 140px;
+                    height: 45px;
+                }
+
+                .navbar-brand {
+                    font-size: 18px;
+                }
+            }
+
+            .carrousel-container {
+                max-width: 1000px;
+                margin: 0 auto;
+            }
+
+            .carousel-item img {
+                height: 85vh;
+                min-height: 300px;
+                margin-top: 20px;
+                object-fit: cover;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+                border-radius: 5px;
+            }
+
+            #contenido-div {
+                margin-top: 20px;
+                width: 1000px;
+                height: 380px;
+                padding: 20px;
+                border: 1px solid rgba(0, 0, 0, 0.5);
+                box-shadow: 2px 2px 4px rgba(0.5, 0.5, 0.5, 0.5);
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            #div-video {
+                margin-top: 20px;
+                width: 1000px;
+                height: 380px;
+                padding: 20px;
+                border: 1px solid rgba(0, 0, 0, 0.5);
+                box-shadow: 2px 2px 4px rgba(0.5, 0.5, 0.5, 0.5);
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .zoom {
+                transition: transform 0.3s, opacity 0.3s;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            }
+
+            .zoom:hover {
+                transform: scale(1.05);
+                opacity: 0.7;
+            }
+
+            .select-custom {
+                position: relative;
+                width: 100%;
+            }
+
+            .select-custom::after {
+                content: "\25BC";
+                position: absolute;
+                top: 50%;
+                right: 12px;
+                transform: translateY(-50%);
+                pointer-events: none;
+            }
+
+            .select-custom select {
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+                width: 100%;
+                padding: 8px 16px;
+                border: 1px solid #ced4da;
+                border-radius: 4px;
+                background-color: #fff;
+                font-size: 16px;
+            }
+
+            .select-custom select:hover {
+                border-color: #adb5bd;
+            }
+
+            .select-custom select:focus {
+                border-color: #80bdff;
+                outline: 0;
+                box-shadow: 0 0 0 0.1rem rgba(0, 123, 255, 0.25);
+            }
+
+            textarea.form-control {
+                border-radius: 8px;
+                border: 2px solid #ccc;
+                padding: 10px;
+                font-size: 16px;
+                resize: vertical;
+            }
+
+            textarea.form-control:focus {
+                border-color: #007bff;
+            }
+
+
+            footer {
+                margin-top: 50px;
+            }
+
+            footer .container {
+                max-width: 100%;
+            }
+
+            footer img {
+                width: 150px;
+                height: 50px;
+                margin-top: -10px;
+            }
+
+            @media (max-width: 576px) {
+                footer img {
+                    width: 120px;
+                    height: 40px;
+                }
+            }
+
+            @media (max-width: 768px) {
+                footer img {
+                    width: 130px;
+                    height: 45px;
+                }
+            }
+
+            @media (max-width: 992px) {
+                footer img {
+                    width: 140px;
+                    height: 45px;
+                }
+            }
+        </style>
+    </head>
+    <body onload="cargarMapaLeon();">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top w-100">
+            <div class="container">
+                <a href="index.html" class="navbar-brand">
+                    <img src="img/Logoeuro.png" alt="Logo" />
+                    Euro Industrial sucursal León
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                        aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto justify-content-center">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html">Inicio</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="html/Nosotros.html">Nosotros</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="html/Productos.html">Productos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="html/Opiniones.html">Opiniones</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="html/Contacto.html">Contacto</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>                         
+        </nav>
+        <!-- Fin de navbar -->
+        <div class="container mt-5">
+            <div id="reloj"></div>
+        </div>
+        <div class="carousel-container">
+            <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="img/bodegal1.jpg" class="d-block w-100" alt="..." />
+                    </div>
+                    <div class="carousel-item">
+                        <img src="img/bidegal2.jpg" class="d-block w-100" alt="..." />
+                    </div>
+                    <div class="carousel-item">
+                        <img src="img/bodegal3.jpg" class="d-block w-100" alt="..." />
+                    </div>
+                    <div class="carousel-item">
+                        <img src="img/bodegal5.jpg" class="d-block w-100" alt="..." />
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
+                        data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls"
+                        data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+        <div class="container mt-5">
+            <div class="row">
+                <div class="col-md-6 d-flex justify-content-center align-items-center">
+                    <img src="img/bodegal3.jpg" alt="Queretero" class="img-fluid" style="
+                         margin-top: 50px;
+                         width: 450px;
+                         border-radius: 20px;
+                         border: 1px solid rgba(0, 0, 0, 0.5);
+                         box-shadow: 2px 2px 4px rgba(0.5, 0.5, 0.5, 0.5);
+                         " />
+                </div>
+                <div class="col-md-6 d-flex justify-content-center align-items-center">
+                    <video class="div-video" width="100%" height="auto" muted autoplay loop style="
+                           margin-top: 50px;
+                           border-radius: 20px;
+                           border: 1px solid rgba(0, 0, 0, 0.5);
+                           box-shadow: 2px 2px 4px rgba(0.5, 0.5, 0.5, 0.5);
+                           ">
+                        <source src="videos/EUROINDUSTRIAL_FINAL.mp4" type="video/mp4" />
+                        Your browser does not support the <code>video</code> tag.
+                    </video>
+                </div>
+            </div>
+        </div>
+        <!-- aquí comienza la parte de quien es la empresa -->
+        <div id="contenido-div">
+            <div class="col-6">
+                <h5 class="text-end"><strong>¿Quiénes somos?</strong></h5>
+            </div>
+            <div class="col-10">
+                <h6 style="
+                    margin-left: 330px;
+                    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial,
+                    sans-serif;
+                    justify-content: center;
+                    ">
+                    Somos una empresa fundada en el año 2018 lider del mercado de equipos
+                    para agua a nivel nacional, Euroindustrial es una compañia mayorista
+                    de equipo de piscina especializada únicamente para distribuidores
+                    profesionales, la expansión de Euroindustrial ofrece para usted
+                    sucursales en las ciudades de mayor crecimiento en todo méxico,
+                    garantizando tiempos de respuesta inmediatos. Los planes de expansión
+                    de la compañía suman más de 6 bodegas con un almacenaje aproximado de
+                    mas de 3,600 m2, convenios con las compañias logísticas de mayor
+                    presencia en el país, haciendo cada envío seguro, eficaz pero sobre
+                    todo rápido y oportuno.
+                </h6>
+            </div>
+            <div class="card" style="margin-top: -200px; width: 18rem">
+                <img class="card-img-top" src="img/sQueretero.jpg" alt="Card image cap" />
+                <div class="card-body">
+                    <p class="card-text" style="
+                       font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
+                       'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+                       ">
+                        Sucursal Querétaro fundada en el año <strong>2019</strong> es
+                        nuestra sucursal matriz y fundadora.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <!-- mapa de geolocalizacion -->
+        <div class="container col-12">
+            <h5 style="
+                margin-left: 600px;
+                font-size: xx-large;
+                font-family: Arial, Helvetica, sans-serif;
+                ">
+                <strong>¡Visitanos!</strong>
+            </h5>
+            <div class="col-6" id="mapaLeon" style="
+                 border-style: solid;
+                 width: 900px;
+                 height: 400px;
+                 margin-top: 10px;
+                 margin-left: 300px;
+                 border: 1px solid rgba(0, 0, 0, 0.5);
+                 box-shadow: 2px 2px 4px rgba(0.5, 0.5, 0.5, 0.5);
+                 border-radius: 3px;
+                 "></div>
+            <div class="card" style="
+                 margin-top: -400px;
+                 margin-left: -50px;
+                 width: 18rem;
+                 border: 1px solid rgba(0, 0, 0, 0.5);
+                 box-shadow: 2px 2px 4px rgba(0.5, 0.5, 0.5, 0.5);
+                 ">
+                <img class="card-img-top" src="img/bodegal1.jpg" alt="Card image cap" />
+                <div class="card-body">
+                    <p class="card-text" style="
+                       font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
+                       'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+                       ">
+                        Sucursal León fundada en el año <strong>2021</strong> es una de
+                        nuestras grandes sucursales y con mayor potencial. Nos ubicamos en
+                        Calle Omicron Colonia Industrial Delta #501-A.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <!-- seccion de principales productos -->
+        <div class="container col-12" style="margin-top: 100px">
+            <h5 class="text-center mb-5" style="font-size: 2rem; font-family: Arial, Helvetica, sans-serif">
+                <strong>¡Conoce nuestros principales productos!</strong>
+            </h5>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h5 class="text-center mb-4">
+                            <strong>Bomba de calor full inverter</strong>
+                        </h5>
+                        <a href="html/Productos.html#bombaFull"><img class="zoom img-fluid" src="img/BombaCalor.png"
+                                                                     alt="Bomba de Calor" /></a>
+                    </div>
+                    <div class="col-md-4">
+                        <h5 class="text-center mb-4">
+                            <strong>Calentadores Solares</strong>
+                        </h5>
+                        <a href="html/Productos.html#calentadores"><img class="zoom img-fluid"
+                                                                        src="img/Calentador Solar.png" alt="Calentador Solar" /></a>
+                    </div>
+                    <div class="col-md-4">
+                        <h5 class="text-center mb-4"><strong>Mosaicos</strong></h5>
+                        <a href="html/Productos.html#mosaicos"><img class="zoom img-fluid" src="img/Mosaicos.png"
+                                                                    alt="Mosaicos" /></a>
+                    </div>
+                    <div class="col-md-4">
+                        <img class="zoom img-fluid" style="margin-top: 30px" src="img/pegaveneciano-300x300.png"
+                             alt="Pegaveneciano" />
+                        <h5 class="text-center mb-4" style="margin-top: 10px">
+                            <strong>Pegaveneciano</strong>
+                        </h5>
+                    </div>
+                    <div class="col-md-4">
+                        <a href="html/Productos.html#quimico"><img class="zoom img-fluid" style="margin-top: 30px"
+                                                                   src="img/Cloro.png" alt="Cloro" /></a>
+                        <h5 class="text-center mb-4" style="margin-top: 10px">
+                            <strong>Tricloro Clear Quim</strong>
+                        </h5>
+                    </div>
+                    <div class="col-md-4">
+                        <a href="html/Productos.html#bomba"><img class="zoom img-fluid" style="margin-top: 30px"
+                                                                 src="img/Motobomba.png" alt="Cloro" /></a>
+                        <h5 class="text-center mb-4" style="margin-top: 10px">
+                            <strong>Motobomba Super Flujo</strong>
+                        </h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Aqui empieza la seccion de envio de datos de los clientes -->
+        <h5 class="text-center mb-5" style="font-size: 2rem; font-family: Arial, Helvetica, sans-serif">
+            <strong>¡Quieres recibir mas informacion de nuestros porductos, así como
+                cotizaciones?!</strong>
+        </h5>
+        <div class="d-flex justify-content-center align-items-center vh-50"
+             style="width: 1100px; padding-left: 300px; padding-bottom: 400px">
+            <div class="bg-light rounded-3 shadow-lg p-4 w-100 max-w-md">
+                <h2 class="text-center fw-bold">
+                    Registrate y recibe lo ultimo acerca de nuestros productos.
+                </h2>
+                <p class="text-center text-muted fs-5">
+                    ¡Haz click en el boton registrarse para llenar el formulario!
+                </p>
+                <div class="d-flex justify-content-center gap-3">
+                    <a class="btn btn-dark" href="html/Productos.html#irRegistro">
+                        Registrarse
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!-- Seccion de evaluacion del usuario -->
+        <h5 class="text-center mb-5" style="
+            font-size: 2rem;
+            font-family: Arial, Helvetica, sans-serif;
+            margin-top: -350px;
+            ">
+            <strong>¡Evaluanos!</strong><i class="bi bi-hand-thumbs-up"></i>
+        </h5>
+        <div class="d-flex justify-content-center align-items-center vh-50"
+             style="width: 1100px; padding-left: 300px; padding-bottom: 400px">
+            <div class="bg-light rounded-3 shadow-lg p-4 w-100 max-w-md">
+                <h2 class="text-center fw-bold">
+                    ¡Evalua tu experiencia!
+                </h2>
+                <p class="text-center text-muted fs-5">
+                    ¡Haz click en el boton registrarse para llenar el formulario de opiniones!
+                </p>
+                <div class="d-flex justify-content-center gap-3">
+                    <a class="btn btn-dark" href="html/Opiniones.html#opiniones">
+                        Opinar
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="container" style="margin-top: -250px">
+            <div class="row">
+                <div class="col-md-4" style="padding-left: 120px;">
+                    <h5 class="text-center mb-4">
+                        <strong>Ruex</strong>
+                    </h5>
+                    <img class="zoom img-fluid" src="img/Ruex.png" alt="Ruex"  />
+                </div>
+                <div class="col-md-4">
+                    <h5 class="text-center mb-4">
+                        <strong>VetroWater</strong>
+                    </h5>
+                    <img class="zoom img-fluid" src="img/Vetrowater.png" alt="VetroWater"/>
+                </div>
+                <div class="col-md-4" style="padding-left: 50px;">
+                    <h5 class="text-center mb-4" style="padding-right: 150px;"><strong>Clear Quim</strong></h5>
+                    <img class="zoom img-fluid" src="img/ClearQuim.png" alt="ClearQuim" />
+                </div>
+                <div class="col-md-6" style="padding-left: 230px;">
+                    <img class="zoom img-fluid" style="margin-top: 30px;" src="img/PenTair.png"
+                         alt="PenTair" />
+                    <h5 class="text-center mb-4" style="margin-top: 10px;
+                        padding-right: 100px;">
+                        <strong>PenTair</strong>
+                    </h5>
+                </div>
+                <div class="col-md-6" style="padding-left: 20px;">
+                    <img class="zoom img-fluid" style="margin-top: 30px" src="img/Hyward.png" alt="HayWard" />
+                    <h5 class="text-center mb-4" style="margin-top: 10px;
+                        padding-right: 240px;" >
+                        <strong>HayWard</strong>
+                    </h5>
+                </div>
+                <div class="col-md-12 ruexContainer" style="padding-left: 180px;">
+                    <img class=" ruex img-fluid" style="margin-top: 30px" src="img/ProductosRuex.png" alt="HayWard" />
+                </div>
+            </div>
+        </div>
+    <!-- Footer-->
+    <footer class="bg-dark text-center text-white w-100 mt-5">
+        <div class="container p-4 pb-0">
+            <section class="mb-4">
+                <a class="btn btn-outline-light btn-floating m-1"
+                   href="https://www.instagram.com/euroindustrialmx?igsh=b3Ywa3NiNjdsZmpu" role="button"><i
+                        class="bi bi-instagram"></i></a>
+            </section>
+        </div>
+        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
+            © 2024 Copyright:
+            <a class="text-white" href="https://euroindustrial.com.mx">Venta y distribución de equipos para agua
+                Euroindustrial</a>
+            <img src="img/Logoeuro.png" alt="Euro Industrial Logo" />
+        </div>
+    </footer>
+    <!-- Scripts de sweet alert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.6/dist/sweetalert2.all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="js/Clientes.js" type="text/javascript"></script>
+    <script src="js/Reloj.js" type="text/javascript"></script>
+    <script src="js/Opiniones.js" type="text/javascript"></script>
+    <script src="js/mapaIndex.js" type="text/javascript"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Scripts de los mapas -->
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-core.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-service.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-ui.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"></script>
+</body>
+</html>
